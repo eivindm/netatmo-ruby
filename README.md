@@ -22,14 +22,18 @@ Or install it yourself as:
 
 ## Usage
 
+### Obtaining a refresh token
+Go to https://dev.netatmo.com in MyApps. select your app and use
+"Token Generator" after selecting required scopes (read_station).
+
+
 ### Environment variables
 
-| Name                      | Description            |
-|---------------------------|------------------------|
-| `NETATMO_CLIENT_ID`       | Your app client_id     |
-| `NETATMO_CLIENT_SECRET`   | Your app client_secret |
-| `NETATMO_USERNAME`        | User address email     |
-| `NETATMO_PASSWORD`        | User password          |
+| Name                    | Description            |
+|-------------------------|------------------------|
+| `NETATMO_CLIENT_ID`     | Your app client_id     |
+| `NETATMO_CLIENT_SECRET` | Your app client_secret |
+| `NETATMO_REFRESH_TOKEN` | A valid refresh token  |
 
 ### Creating a client
 
@@ -43,8 +47,7 @@ client = Netatmo::Client.new
 client = Netatmo::Client.new do |config|
   config.client_id = '10acb39bc818e5789'
   config.client_secret = '10dsfxyzbkzva'
-  config.username = 'user@email.address'
-  config.password = 'UserPassword'
+  config.refresh_token = '10abcabcabc'
 end
 
 ```

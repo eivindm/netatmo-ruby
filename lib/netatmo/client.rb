@@ -8,7 +8,7 @@ module Netatmo
     BASE_URL = 'https://api.netatmo.net'
     attr_accessor :access_token, :refresh_token, :expires_at
 
-    Config = Struct.new(:client_id, :client_secret, :username, :password, :base_url)
+    Config = Struct.new(:client_id, :client_secret, :refresh_token, :base_url)
 
     def initialize(&config_block)
       if block_given?
@@ -29,8 +29,7 @@ module Netatmo
       @config ||= Config.new(
         ENV['NETATMO_CLIENT_ID'],
         ENV['NETATMO_CLIENT_SECRET'],
-        ENV['NETATMO_USERNAME'],
-        ENV['NETATMO_PASSWORD'],
+        ENV['NETATMO_REFRESH_TOKEN'],
         BASE_URL
       )
     end
@@ -44,27 +43,14 @@ module Netatmo
     end
 
     def fetch_token
-      response = if @refresh_token
-                   connection.post '/oauth2/token' do |request|
-                     request.body = {
-                       grant_type: :refresh_token,
-                       refresh_token: @refresh_token,
-                       client_id: config.client_id,
-                       client_secret: config.client_secret
-                     }
-                   end
-                 else
-                   connection.post '/oauth2/token' do |request|
-                     request.body = {
-                       grant_type: :password,
-                       client_id: config.client_id,
-                       client_secret: config.client_secret,
-                       username: config.username,
-                       password: config.password,
-                       scope: 'read_station'
-                     }
-                   end
-                 end
+      connection.post '/oauth2/token' do |request|
+        request.body = {
+          grant_type: :refresh_token,
+          refresh_token: @refresh_token,
+          client_id: config.client_id,
+          client_secret: config.client_secret
+        }
+      end
       store_token(response)
     end
 
